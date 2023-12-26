@@ -157,52 +157,55 @@ function SCKK(logs: string[]) {
                 fo.lemondott++
             }
         }
-        const lemondva = logs.findLastIndex(
-            (element) =>
-                element.includes('Törlődött a következő hívás: ' + i) &&
-                element.endsWith('TAXI törölte)')
+        const ujhivas = logs.findLastIndex((element) =>
+            element.endsWith('Új hívás érkezett: ' + i)
         )
-        if (lemondva !== -1) {
+        if (ujhivas !== -1) {
             let most = new Date().setHours(
                 Number(
-                    logs[lemondva]
+                    logs[ujhivas]
                         .split(' ')[1]
                         .slice(undefined, -1)
                         .split(':')[0]
                 ),
                 Number(
-                    logs[lemondva]
+                    logs[ujhivas]
                         .split(' ')[1]
                         .slice(undefined, -1)
                         .split(':')[1]
                 ),
                 Number(
-                    logs[lemondva]
+                    logs[ujhivas]
                         .split(' ')[1]
                         .slice(undefined, -1)
                         .split(':')[2]
                 ),
                 0
             )
+            const torolve = logs.findLastIndex(
+                (element) =>
+                    element.includes('Törlődött a következő hívás: ' + i) &&
+                    element.endsWith('TAXI törölte)')
+            )
             const elfogadva = logs.findLastIndex((element) =>
                 element.endsWith('TAXI elfogadta a következő hívást: ' + i)
             )
-            if (elfogadva !== -1) {
+            if (torolve !== -1 && elfogadva === -1) {
                 let elf = new Date().setHours(
                     Number(
-                        logs[elfogadva]
+                        logs[torolve]
                             .split(' ')[1]
                             .slice(undefined, -1)
                             .split(':')[0]
                     ),
                     Number(
-                        logs[elfogadva]
+                        logs[torolve]
                             .split(' ')[1]
                             .slice(undefined, -1)
                             .split(':')[1]
                     ),
                     Number(
-                        logs[elfogadva]
+                        logs[torolve]
                             .split(' ')[1]
                             .slice(undefined, -1)
                             .split(':')[2]
