@@ -91,7 +91,7 @@ dropZone?.addEventListener('drop', (ev) => {
 })
 
 function SCKK(logs: string[]) {
-    document.getElementById('loadhelp')?.classList.remove('hidden')
+    document.getElementById('loadhelp')?.classList.remove('!hidden')
     document.getElementById('draghelp')?.classList.add('hidden')
     setTimeout(() => {
         for (let i = 1; i < 2000; i++) {
@@ -303,7 +303,7 @@ function handleReturn() {
         }
         returner?.appendChild(h2)
     })
-    document.getElementById('loadhelp')?.classList.add('hidden')
+    document.getElementById('loadhelp')?.classList.add('!hidden')
     document.getElementById('amuszak-title')?.classList.remove('hidden')
     document.getElementById('all-title')?.classList.remove('hidden')
     document.getElementById('discordmaker')?.classList.remove('hidden')
