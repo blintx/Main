@@ -248,33 +248,33 @@ function SCKK(logs: string[]) {
         console.log(fo)
         returnerarray = []
         returnerarray.push(
-            `Mai nap (${new Date().getFullYear()}.${new Date().getMonth()}.${new Date().getDate()}.)`
+            `# Mai nap (${new Date().getFullYear()}.${new Date().getMonth()}.${new Date().getDate()}.)`
         )
         returnerarray.push('<@&1117769320534134866>')
         returnerarray.push('')
         for (const val in fo.emberek) {
             if (fo.emberek[val].műszak > 0) {
                 returnerarray.push(
-                    val.split(' ')[0] + ' - ' + fo.emberek[val].műszak
+                    '- ' + val.split(' ')[0] + ': ' + fo.emberek[val].műszak
                 )
             }
         }
         returnerarray.push('')
-        returnerarray.push('1 perces - ' + fo.egyperces)
-        returnerarray.push('Lemondott - ' + fo.lemondott)
+        returnerarray.push('- 1 perces: ' + fo.egyperces)
+        returnerarray.push('- Lemondott: ' + fo.lemondott)
         returnerarray.push('')
-        returnerarray.push('Heti statisztika így néz ki jelenleg:')
+        returnerarray.push('## Heti statisztika így néz ki jelenleg:')
         returnerarray.push('')
         for (const val in fo.emberek) {
             if (fo.emberek[val].összesen > 0) {
                 returnerarray.push(
-                    val.split(' ')[0] + ' - ' + fo.emberek[val].összesen
+                    '- ' + val.split(' ')[0] + ': ' + fo.emberek[val].összesen
                 )
             }
         }
         returnerarray.push('')
         returnerarray.push(
-            'Az üzenetre kérlek reagáljatok annak függvényében, hogy holnap jelen tudtok-e lenni csapatidőbe. Köszi!'
+            '**Az üzenetre kérlek reagáljatok annak függvényében, hogy holnap jelen tudtok-e lenni csapatidőbe. Köszi!**'
         )
         handleReturn()
     }, 100)
