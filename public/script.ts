@@ -81,7 +81,10 @@ dropZone?.addEventListener('drop', (ev) => {
 })
 
 function SCKK(logs: string[]) {
-    for (let i = 1; i < 1000; i++) {
+    document.getElementById('title')!.classList.add('hidden')
+    document.getElementById('draghelp')!.classList.add('hidden')
+    document.getElementById('loadhelp')!.classList.remove('hidden')
+    for (let i = 1; i < 2000; i++) {
         elfogadott.push({
             elfogadó: 'senki',
             szám: i,
@@ -266,4 +269,28 @@ function handleReturn() {
         }
         returner?.appendChild(h2)
     })
+    document.getElementById('loadhelp')?.classList.add('hidden')
+    document.getElementById('title')?.classList.remove('hidden')
+    document.getElementById('amuszak-title')?.classList.remove('hidden')
+    document.getElementById('all-title')?.classList.remove('hidden')
+    const amuszak = document.getElementById('amuszak')
+    for (const data in fo.emberek) {
+        const item = document.createElement('h2')
+        item.innerText = data + ' - ' + fo.emberek[data].műszak
+        amuszak?.appendChild(item)
+    }
+    amuszak?.lastElementChild?.classList.add('mb-5')
+    const lemondott = document.createElement('h2')
+    lemondott.innerText = 'Lemondott - ' + fo.lemondott
+    amuszak?.appendChild(lemondott)
+    const egyperces = document.createElement('h2')
+    egyperces.innerText = '1 perces - ' + fo.egyperces
+    egyperces.classList.add('mb-5')
+    amuszak?.appendChild(egyperces)
+    const osszes = document.getElementById('all')
+    for (const data in fo.emberek) {
+        const item = document.createElement('h2')
+        item.innerText = data + ' - ' + fo.emberek[data].összesen
+        osszes?.appendChild(item)
+    }
 }

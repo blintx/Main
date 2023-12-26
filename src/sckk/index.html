@@ -12,11 +12,33 @@
     </head>
     <body class="bg-slate-700 text-white">
         <div class="flex h-screen" id="drop-zone">
-            <div class="m-auto text-center">
-                <h1 class="font-semibold text-3xl">SCKK Logman</h1>
-                <h2 class="text-gray-300 mb-5">Húzd be ide a logokat</h2>
+            <div id="majne" class="m-auto text-center">
+                <div id="title" class="flex items-end gap-1">
+                    <h1 class="font-semibold text-3xl">SCKK Logman</h1>
+                    <h2 class="text-gray-300">by HVCsano</h2>
+                </div>
+                <h2 class="text-gray-300 mb-5" id="draghelp">
+                    Húzd be ide a logokat
+                </h2>
+                <h1 class="font-semibold text-3xl hidden" id="loadhelp">
+                    Feldolgozás...
+                </h1>
+                <h1
+                    class="mb-5 hidden mt-2 font-semibold text-xl"
+                    id="amuszak-title"
+                >
+                    A műszak
+                </h1>
+                <div id="amuszak"></div>
+                <div class="hidden" id="all-title">
+                    <h1 class="font-semibold text-xl">Összesen</h1>
+                    <h2 class="text-gray-300 mb-5">
+                        Csak az A műszakosokat számolja
+                    </h2>
+                </div>
+                <div id="all"></div>
                 <div
-                    class="bg-slate-500 font-semibold rounded-lg p-3"
+                    class="bg-slate-500 hidden font-semibold rounded-lg p-3"
                     id="returner"
                 ></div>
             </div>
