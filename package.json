@@ -8,9 +8,7 @@
         "dev:ndm": "nodemon",
         "dev:ts": "tsc -w",
         "dev:tw": "tailwindcss -i ./src/main.css -o ./public/style.css --watch",
-        "build": "run-p build:ts build:tw",
-        "build:ts": "tsc --build",
-        "build:tw": "tailwindcss -i ./src/main.css -o ./public/style.css"
+        "build": "tsc --build && tailwindcss -i ./src/main.css -o ./public/style.css"
     },
     "keywords": [],
     "author": "",
