@@ -216,6 +216,7 @@ function SCKK(logs: string[]) {
         }
     }
     console.log(fo)
+    returnerarray = []
     returnerarray.push(
         `Mai nap (${new Date().getFullYear()}.${new Date().getMonth()}.${new Date().getDate()}.)`
     )
@@ -249,6 +250,10 @@ function SCKK(logs: string[]) {
 }
 
 function handleReturn() {
+    while (returner?.firstChild) {
+        returner.removeChild(returner.lastChild!)
+    }
+
     returnerarray.forEach((val) => {
         let h2 = document.createElement('h2')
         if (val === '') {
