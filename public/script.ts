@@ -49,8 +49,18 @@ let fo: {
 }
 
 dropZone?.addEventListener('drop', (ev) => {
-    let logs: string[] = []
     ev.preventDefault()
+    let logs: string[] = []
+    fo = {
+        emberek: {},
+        lemondott: 0,
+        egyperces: 0,
+    }
+    document.getElementById('amuszak-title')?.classList.add('hidden')
+    document.getElementById('all-title')?.classList.add('hidden')
+    document.getElementById('discordmaker')?.classList.add('hidden')
+    document.getElementById('amuszak')!.innerHTML = ''
+    document.getElementById('all')!.innerHTML = ''
     let fiels = ev.dataTransfer?.files.length
     let filesProcessed = 0
     for (const file of ev.dataTransfer!.files) {
@@ -81,179 +91,203 @@ dropZone?.addEventListener('drop', (ev) => {
 })
 
 function SCKK(logs: string[]) {
-    document.getElementById('title')!.classList.add('hidden')
-    document.getElementById('draghelp')!.classList.add('hidden')
-    document.getElementById('loadhelp')!.classList.remove('hidden')
-    for (let i = 1; i < 2000; i++) {
-        elfogadott.push({
-            elfogadó: 'senki',
-            szám: i,
-        })
-        const index = logs.findLastIndex((element) =>
-            new RegExp(`elfogadta a következő hívást: ${i}$`).test(element)
-        )
+    document.getElementById('loadhelp')?.classList.remove('hidden')
+    document.getElementById('draghelp')?.classList.add('hidden')
+    setTimeout(() => {
+        for (let i = 1; i < 2000; i++) {
+            elfogadott.push({
+                elfogadó: 'senki',
+                szám: i,
+            })
+            const index = logs.findLastIndex((element) =>
+                new RegExp(`elfogadta a következő hívást: ${i}$`).test(element)
+            )
 
-        if (index !== -1) {
-            let most = new Date().setHours(
-                Number(
-                    logs[index].split(' ')[1].slice(undefined, -1).split(':')[0]
-                ),
-                Number(
-                    logs[index].split(' ')[1].slice(undefined, -1).split(':')[1]
-                ),
-                Number(
-                    logs[index].split(' ')[1].slice(undefined, -1).split(':')[2]
-                ),
-                0
-            )
-            let cuccman = logs[index].split(':')[4].split('/')[0].slice(1, -1)
-            if (cuccman !== 'senki') {
-                if (tagok.includes(cuccman.split(' ')[0])) {
-                    if (fo.emberek[cuccman]) {
-                        if (akezdet < most && most < avege) {
-                            fo.emberek[cuccman].összesen++
-                            fo.emberek[cuccman].műszak++
-                        } else {
-                            fo.emberek[cuccman].összesen++
-                        }
-                    } else {
-                        if (akezdet < most && most < avege) {
-                            fo.emberek[cuccman] = { műszak: 1, összesen: 1 }
-                        } else {
-                            fo.emberek[cuccman] = { műszak: 0, összesen: 1 }
-                        }
-                    }
-                }
-            }
-        }
-        const lemondott = logs.findLastIndex((element) =>
-            element.includes(
-                'Törlődött a következő hívás: ' + i + ' (lemondta a játékos)'
-            )
-        )
-        const lemondott2 = logs.findLastIndex((element) =>
-            element.endsWith('TAXI elfogadta a következő hívást: ' + i)
-        )
-        if (lemondott !== -1 && lemondott2 == -1) {
-            let most = new Date().setHours(
-                Number(
-                    logs[lemondott]
-                        .split(' ')[1]
-                        .slice(undefined, -1)
-                        .split(':')[0]
-                ),
-                Number(
-                    logs[lemondott]
-                        .split(' ')[1]
-                        .slice(undefined, -1)
-                        .split(':')[1]
-                ),
-                Number(
-                    logs[lemondott]
-                        .split(' ')[1]
-                        .slice(undefined, -1)
-                        .split(':')[2]
-                ),
-                0
-            )
-            if (akezdet < most && most < avege) {
-                fo.lemondott++
-            }
-        }
-        const ujhivas = logs.findLastIndex((element) =>
-            element.endsWith('Új hívás érkezett: ' + i)
-        )
-        if (ujhivas !== -1) {
-            let most = new Date().setHours(
-                Number(
-                    logs[ujhivas]
-                        .split(' ')[1]
-                        .slice(undefined, -1)
-                        .split(':')[0]
-                ),
-                Number(
-                    logs[ujhivas]
-                        .split(' ')[1]
-                        .slice(undefined, -1)
-                        .split(':')[1]
-                ),
-                Number(
-                    logs[ujhivas]
-                        .split(' ')[1]
-                        .slice(undefined, -1)
-                        .split(':')[2]
-                ),
-                0
-            )
-            const torolve = logs.findLastIndex(
-                (element) =>
-                    element.includes('Törlődött a következő hívás: ' + i) &&
-                    element.endsWith('TAXI törölte)')
-            )
-            const elfogadva = logs.findLastIndex((element) =>
-                element.endsWith('TAXI elfogadta a következő hívást: ' + i)
-            )
-            if (torolve !== -1 && elfogadva === -1) {
-                let elf = new Date().setHours(
+            if (index !== -1) {
+                let most = new Date().setHours(
                     Number(
-                        logs[torolve]
+                        logs[index]
                             .split(' ')[1]
                             .slice(undefined, -1)
                             .split(':')[0]
                     ),
                     Number(
-                        logs[torolve]
+                        logs[index]
                             .split(' ')[1]
                             .slice(undefined, -1)
                             .split(':')[1]
                     ),
                     Number(
-                        logs[torolve]
+                        logs[index]
                             .split(' ')[1]
                             .slice(undefined, -1)
                             .split(':')[2]
                     ),
                     0
                 )
-                if (most - elf <= 60000) {
-                    fo.egyperces++
+                let cuccman = logs[index]
+                    .split(':')[4]
+                    .split('/')[0]
+                    .slice(1, -1)
+                if (cuccman !== 'senki') {
+                    if (tagok.includes(cuccman.split(' ')[0])) {
+                        if (fo.emberek[cuccman]) {
+                            if (akezdet < most && most < avege) {
+                                fo.emberek[cuccman].összesen++
+                                fo.emberek[cuccman].műszak++
+                            } else {
+                                fo.emberek[cuccman].összesen++
+                            }
+                        } else {
+                            if (akezdet < most && most < avege) {
+                                fo.emberek[cuccman] = { műszak: 1, összesen: 1 }
+                            } else {
+                                fo.emberek[cuccman] = { műszak: 0, összesen: 1 }
+                            }
+                        }
+                    }
+                }
+            }
+            const lemondott = logs.findLastIndex((element) =>
+                element.includes(
+                    'Törlődött a következő hívás: ' +
+                        i +
+                        ' (lemondta a játékos)'
+                )
+            )
+            const lemondott2 = logs.findLastIndex((element) =>
+                element.endsWith('TAXI elfogadta a következő hívást: ' + i)
+            )
+            if (lemondott !== -1 && lemondott2 == -1) {
+                let most = new Date().setHours(
+                    Number(
+                        logs[lemondott]
+                            .split(' ')[1]
+                            .slice(undefined, -1)
+                            .split(':')[0]
+                    ),
+                    Number(
+                        logs[lemondott]
+                            .split(' ')[1]
+                            .slice(undefined, -1)
+                            .split(':')[1]
+                    ),
+                    Number(
+                        logs[lemondott]
+                            .split(' ')[1]
+                            .slice(undefined, -1)
+                            .split(':')[2]
+                    ),
+                    0
+                )
+                if (akezdet < most && most < avege) {
+                    fo.lemondott++
+                }
+            }
+            const ujhivas = logs.findLastIndex((element) =>
+                element.endsWith('Új hívás érkezett: ' + i)
+            )
+            if (ujhivas !== -1) {
+                let most = new Date().setHours(
+                    Number(
+                        logs[ujhivas]
+                            .split(' ')[1]
+                            .slice(undefined, -1)
+                            .split(':')[0]
+                    ),
+                    Number(
+                        logs[ujhivas]
+                            .split(' ')[1]
+                            .slice(undefined, -1)
+                            .split(':')[1]
+                    ),
+                    Number(
+                        logs[ujhivas]
+                            .split(' ')[1]
+                            .slice(undefined, -1)
+                            .split(':')[2]
+                    ),
+                    0
+                )
+                const torolve = logs.findLastIndex(
+                    (element) =>
+                        element.includes('Törlődött a következő hívás: ' + i) &&
+                        element.endsWith('TAXI törölte)')
+                )
+                const elfogadva = logs.findLastIndex((element) =>
+                    element.endsWith('TAXI elfogadta a következő hívást: ' + i)
+                )
+                if (torolve !== -1 && elfogadva === -1) {
+                    let elf = new Date().setHours(
+                        Number(
+                            logs[torolve]
+                                .split(' ')[1]
+                                .slice(undefined, -1)
+                                .split(':')[0]
+                        ),
+                        Number(
+                            logs[torolve]
+                                .split(' ')[1]
+                                .slice(undefined, -1)
+                                .split(':')[1]
+                        ),
+                        Number(
+                            logs[torolve]
+                                .split(' ')[1]
+                                .slice(undefined, -1)
+                                .split(':')[2]
+                        ),
+                        0
+                    )
+                    if (most - elf <= 60000) {
+                        fo.egyperces++
+                    }
                 }
             }
         }
-    }
-    console.log(fo)
-    returnerarray = []
-    returnerarray.push(
-        `Mai nap (${new Date().getFullYear()}.${new Date().getMonth()}.${new Date().getDate()}.)`
-    )
-    returnerarray.push('<@&1117769320534134866>')
-    returnerarray.push('')
-    for (const val in fo.emberek) {
-        if (fo.emberek[val].műszak > 0) {
-            returnerarray.push(
-                val.split(' ')[0] + ' - ' + fo.emberek[val].műszak
-            )
+        console.log(fo)
+        returnerarray = []
+        returnerarray.push(
+            `Mai nap (${new Date().getFullYear()}.${new Date().getMonth()}.${new Date().getDate()}.)`
+        )
+        returnerarray.push('<@&1117769320534134866>')
+        returnerarray.push('')
+        for (const val in fo.emberek) {
+            if (fo.emberek[val].műszak > 0) {
+                returnerarray.push(
+                    val.split(' ')[0] + ' - ' + fo.emberek[val].műszak
+                )
+            }
         }
-    }
-    returnerarray.push('')
-    returnerarray.push('1 perces - ' + fo.egyperces)
-    returnerarray.push('Lemondott - ' + fo.lemondott)
-    returnerarray.push('')
-    returnerarray.push('Heti statisztika így néz ki jelenleg:')
-    returnerarray.push('')
-    for (const val in fo.emberek) {
-        if (fo.emberek[val].összesen > 0) {
-            returnerarray.push(
-                val.split(' ')[0] + ' - ' + fo.emberek[val].összesen
-            )
+        returnerarray.push('')
+        returnerarray.push('1 perces - ' + fo.egyperces)
+        returnerarray.push('Lemondott - ' + fo.lemondott)
+        returnerarray.push('')
+        returnerarray.push('Heti statisztika így néz ki jelenleg:')
+        returnerarray.push('')
+        for (const val in fo.emberek) {
+            if (fo.emberek[val].összesen > 0) {
+                returnerarray.push(
+                    val.split(' ')[0] + ' - ' + fo.emberek[val].összesen
+                )
+            }
         }
-    }
-    returnerarray.push('')
-    returnerarray.push(
-        'Az üzenetre kérlek reagáljatok annak függvényében, hogy holnap jelen tudtok-e lenni csapatidőbe. Köszi!'
-    )
-    handleReturn()
+        returnerarray.push('')
+        returnerarray.push(
+            'Az üzenetre kérlek reagáljatok annak függvényében, hogy holnap jelen tudtok-e lenni csapatidőbe. Köszi!'
+        )
+        handleReturn()
+    }, 100)
 }
+
+document.getElementById('discordmaker')?.addEventListener('click', (ev) => {
+    ev.preventDefault()
+    if (returner?.classList.contains('hidden')) {
+        returner?.classList.remove('hidden')
+    } else {
+        returner?.classList.add('hidden')
+    }
+})
 
 function handleReturn() {
     while (returner?.firstChild) {
@@ -270,9 +304,9 @@ function handleReturn() {
         returner?.appendChild(h2)
     })
     document.getElementById('loadhelp')?.classList.add('hidden')
-    document.getElementById('title')?.classList.remove('hidden')
     document.getElementById('amuszak-title')?.classList.remove('hidden')
     document.getElementById('all-title')?.classList.remove('hidden')
+    document.getElementById('discordmaker')?.classList.remove('hidden')
     const amuszak = document.getElementById('amuszak')
     for (const data in fo.emberek) {
         const item = document.createElement('h2')

@@ -5,6 +5,7 @@
     "main": "./src/index.js",
     "scripts": {
         "dev": "run-p dev:ndm dev:tw dev:ts",
+        "dev:a": "nodemon src/index.ts --exec \"tsc --build && tailwindcss -i ./src/main.css -o ./public/style.css && node .\" -e ts,html,css,json",
         "dev:ndm": "nodemon",
         "dev:ts": "tsc -w",
         "dev:tw": "tailwindcss -i ./src/main.css -o ./public/style.css --watch",
