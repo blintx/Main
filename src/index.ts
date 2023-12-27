@@ -19,6 +19,13 @@ app.get('/', (req, res) => {
     res.sendFile(path.resolve('src/index.html'))
 })
 
+app.use((req, res, next) => {
+    res.status(404)
+    if (req.accepts('html')) {
+        res.sendFile(path.resolve('src/404.html'))
+    }
+})
+
 app.listen(port, () => {
     console.log('http://localhost:' + port)
 })

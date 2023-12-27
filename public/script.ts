@@ -115,7 +115,7 @@ function SCKK(logs: string[]) {
     setTimeout(() => {
         for (const nap in fo) {
             if (nap !== 'Összesen') {
-                for (let i = 1; i < 1200; i++) {
+                for (let i = 1; i < 2000; i++) {
                     const tesztmama = logs.findLastIndex(
                         (element) =>
                             element.startsWith('[' + nap) &&
@@ -215,121 +215,124 @@ function SCKK(logs: string[]) {
                                     }
                                 }
                             }
-                        }
-                        const lemondott = logs.findLastIndex(
-                            (element) =>
-                                element.startsWith('[' + nap) &&
-                                element.includes(
-                                    'Törlődött a következő hívás: ' +
-                                        i +
-                                        ' (lemondta a játékos)'
-                                )
-                        )
-                        const lemondott2 = logs.findLastIndex(
-                            (element) =>
-                                element.startsWith('[' + nap) &&
-                                element.endsWith(
-                                    'TAXI elfogadta a következő hívást: ' + i
-                                )
-                        )
-                        if (lemondott !== -1 && lemondott2 == -1) {
-                            let most = new Date().setHours(
-                                Number(
-                                    logs[lemondott]
-                                        .split(' ')[1]
-                                        .slice(undefined, -1)
-                                        .split(':')[0]
-                                ),
-                                Number(
-                                    logs[lemondott]
-                                        .split(' ')[1]
-                                        .slice(undefined, -1)
-                                        .split(':')[1]
-                                ),
-                                Number(
-                                    logs[lemondott]
-                                        .split(' ')[1]
-                                        .slice(undefined, -1)
-                                        .split(':')[2]
-                                ),
-                                0
-                            )
-                            if (akezdet < most && most < avege) {
-                                fo[nap].lemondott++
-                                if (dates.length > 1) {
-                                    fo['Összesen'].lemondott++
-                                }
-                            }
-                        }
-                        const ujhivas = logs.findLastIndex(
-                            (element) =>
-                                element.startsWith('[' + nap) &&
-                                element.endsWith('Új hívás érkezett: ' + i)
-                        )
-                        if (ujhivas !== -1) {
-                            let most = new Date().setHours(
-                                Number(
-                                    logs[ujhivas]
-                                        .split(' ')[1]
-                                        .slice(undefined, -1)
-                                        .split(':')[0]
-                                ),
-                                Number(
-                                    logs[ujhivas]
-                                        .split(' ')[1]
-                                        .slice(undefined, -1)
-                                        .split(':')[1]
-                                ),
-                                Number(
-                                    logs[ujhivas]
-                                        .split(' ')[1]
-                                        .slice(undefined, -1)
-                                        .split(':')[2]
-                                ),
-                                0
-                            )
-                            const torolve = logs.findLastIndex(
+                        } else {
+                            const ujhivas = logs.findLastIndex(
                                 (element) =>
                                     element.startsWith('[' + nap) &&
-                                    element.includes(
-                                        'Törlődött a következő hívás: ' + i
-                                    ) &&
-                                    element.endsWith('TAXI törölte)')
+                                    element.endsWith('Új hívás érkezett: ' + i)
                             )
-                            const elfogadva = logs.findLastIndex(
-                                (element) =>
-                                    element.startsWith('[' + nap) &&
-                                    element.endsWith(
-                                        'TAXI elfogadta a következő hívást: ' +
-                                            i
-                                    )
-                            )
-                            if (torolve !== -1 && elfogadva === -1) {
-                                let elf = new Date().setHours(
+                            if (ujhivas !== -1) {
+                                let most = new Date().setHours(
                                     Number(
-                                        logs[torolve]
+                                        logs[ujhivas]
                                             .split(' ')[1]
                                             .slice(undefined, -1)
                                             .split(':')[0]
                                     ),
                                     Number(
-                                        logs[torolve]
+                                        logs[ujhivas]
                                             .split(' ')[1]
                                             .slice(undefined, -1)
                                             .split(':')[1]
                                     ),
                                     Number(
-                                        logs[torolve]
+                                        logs[ujhivas]
                                             .split(' ')[1]
                                             .slice(undefined, -1)
                                             .split(':')[2]
                                     ),
                                     0
                                 )
-                                if (most - elf <= 60000) {
-                                    fo[nap].egyperces++
-                                    if (dates.length > 1) {
-                                        fo['Összesen'].egyperces++
+                                const torolve = logs.findLastIndex(
+                                    (element) =>
+                                        element.startsWith('[' + nap) &&
+                                        element.includes(
+                                            'Törlődött a következő hívás: ' + i
+                                        ) &&
+                                        element.endsWith('TAXI törölte)')
+                                )
+                                const elfogadva = logs.findLastIndex(
+                                    (element) =>
+                                        element.startsWith('[' + nap) &&
+                                        element.endsWith(
+                                            'TAXI elfogadta a következő hívást: ' +
+                                                i
+                                        )
+                                )
+                                if (torolve !== -1 && elfogadva === -1) {
+                                    let elf = new Date().setHours(
+                                        Number(
+                                            logs[torolve]
+                                                .split(' ')[1]
+                                                .slice(undefined, -1)
+                                                .split(':')[0]
+                                        ),
+                                        Number(
+                                            logs[torolve]
+                                                .split(' ')[1]
+                                                .slice(undefined, -1)
+                                                .split(':')[1]
+                                        ),
+                                        Number(
+                                            logs[torolve]
+                                                .split(' ')[1]
+                                                .slice(undefined, -1)
+                                                .split(':')[2]
+                                        ),
+                                        0
+                                    )
+                                    if (most - elf <= 60000) {
+                                        fo[nap].egyperces++
+                                        if (dates.length > 1) {
+                                            fo['Összesen'].egyperces++
+                                        }
+                                    }
+                                } else {
+                                    const lemondott = logs.findLastIndex(
+                                        (element) =>
+                                            element.startsWith('[' + nap) &&
+                                            element.includes(
+                                                'Törlődött a következő hívás: ' +
+                                                    i +
+                                                    ' (lemondta a játékos)'
+                                            )
+                                    )
+                                    const lemondott2 = logs.findLastIndex(
+                                        (element) =>
+                                            element.startsWith('[' + nap) &&
+                                            element.endsWith(
+                                                'TAXI elfogadta a következő hívást: ' +
+                                                    i
+                                            )
+                                    )
+                                    if (lemondott !== -1 && lemondott2 == -1) {
+                                        let most = new Date().setHours(
+                                            Number(
+                                                logs[lemondott]
+                                                    .split(' ')[1]
+                                                    .slice(undefined, -1)
+                                                    .split(':')[0]
+                                            ),
+                                            Number(
+                                                logs[lemondott]
+                                                    .split(' ')[1]
+                                                    .slice(undefined, -1)
+                                                    .split(':')[1]
+                                            ),
+                                            Number(
+                                                logs[lemondott]
+                                                    .split(' ')[1]
+                                                    .slice(undefined, -1)
+                                                    .split(':')[2]
+                                            ),
+                                            0
+                                        )
+                                        if (akezdet < most && most < avege) {
+                                            fo[nap].lemondott++
+                                            if (dates.length > 1) {
+                                                fo['Összesen'].lemondott++
+                                            }
+                                        }
                                     }
                                 }
                             }
