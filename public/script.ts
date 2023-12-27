@@ -115,21 +115,20 @@ function SCKK(logs: string[]) {
     setTimeout(() => {
         for (const nap in fo) {
             if (nap !== 'Összesen') {
-                for (let i = 1; i < 5000; i++) {
+                for (let i = 1; i < 2000; i++) {
                     const tesztmama = logs.findLastIndex(
                         (element) =>
                             element.startsWith('[' + nap) &&
                             element.endsWith('Új hívás érkezett: ' + i)
                     )
-                    if (tesztmama !== -1) {
-                        const index = logs.findLastIndex(
-                            (element) =>
-                                element.startsWith('[' + nap) &&
-                                element.endsWith(
-                                    'TAXI elfogadta a következő hívást: ' + i
-                                )
-                        )
-
+                    const index = logs.findLastIndex(
+                        (element) =>
+                            element.startsWith('[' + nap) &&
+                            element.endsWith(
+                                'TAXI elfogadta a következő hívást: ' + i
+                            )
+                    )
+                    if (tesztmama !== -1 || index !== -1) {
                         if (index !== -1) {
                             let most = new Date().setHours(
                                 Number(
