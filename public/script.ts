@@ -115,7 +115,7 @@ function SCKK(logs: string[]) {
     setTimeout(() => {
         for (const nap in fo) {
             if (nap !== 'Összesen') {
-                for (let i = 1; i < 2000; i++) {
+                for (let i = 1; i < 5000; i++) {
                     const tesztmama = logs.findLastIndex(
                         (element) =>
                             element.startsWith('[' + nap) &&
@@ -371,16 +371,16 @@ function handleReturn(nap: string) {
     const amuszak = document.createElement('div')
     for (const data in fo[nap].emberek) {
         const item = document.createElement('h2')
-        item.innerText = data + ' - ' + fo[nap].emberek[data].műszak
+        item.innerText = '- ' + data + ': ' + fo[nap].emberek[data].műszak
         amuszak?.appendChild(item)
     }
     amuszak?.lastElementChild?.classList.add('mb-5')
     ezanap.appendChild(amuszak)
     const lemondott = document.createElement('h2')
-    lemondott.innerText = 'Lemondott - ' + fo[nap].lemondott
+    lemondott.innerText = '- Lemondott: ' + fo[nap].lemondott
     amuszak?.appendChild(lemondott)
     const egyperces = document.createElement('h2')
-    egyperces.innerText = '1 perces - ' + fo[nap].egyperces
+    egyperces.innerText = '- 1 perces: ' + fo[nap].egyperces
     egyperces.classList.add('mb-5')
     amuszak?.appendChild(egyperces)
     const osszescim = document.createElement('h2')
@@ -390,7 +390,7 @@ function handleReturn(nap: string) {
     const osszes = document.createElement('div')
     for (const data in fo[nap].emberek) {
         const item = document.createElement('h2')
-        item.innerText = data + ' - ' + fo[nap].emberek[data].összesen
+        item.innerText = '- ' + data + ': ' + fo[nap].emberek[data].összesen
         osszes?.appendChild(item)
     }
     ezanap.appendChild(osszes)
