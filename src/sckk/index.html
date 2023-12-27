@@ -9,12 +9,13 @@
             var exports = {}
         </script>
         <script type="module" src="script.js"></script>
+        <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
     </head>
     <body class="bg-slate-700 text-white">
         <div class="flex h-screen" id="drop-zone">
             <div
                 id="majne"
-                class="m-auto p-10 rounded-xl pt-1 bg-gray-600 text-center"
+                class="m-auto p-10 rounded-xl pt-1 pb-1 bg-gray-600 text-center"
             >
                 <div
                     class="flex bg-gray-900 px-10 -mt-1 rounded-tl-xl rounded-tr-xl py-2 text-center justify-center -mx-10 items-end gap-1"
@@ -32,38 +33,26 @@
                 <h2 class="text-gray-300 font-semibold text-lg" id="draghelp">
                     Húzd be ide a logokat
                 </h2>
-                <div class="lds-dual-ring !hidden" id="loadhelp"></div>
-                <h1
-                    class="mb-5 hidden mt-2 font-semibold text-xl"
-                    id="amuszak-title"
-                >
-                    A műszak
-                </h1>
-                <div id="amuszak"></div>
-                <div class="hidden" id="all-title">
-                    <h1 class="font-semibold text-xl">Összesen</h1>
-                    <h2 class="text-gray-300 mb-5">
-                        Csak az A műszakosokat számolja
+                <div id="loadhelp" class="!hidden">
+                    <div class="lds-dual-ring"></div>
+                    <h2
+                        class="text-gray-300 font-semibold text-lg"
+                        id="draghelp"
+                    >
+                        Ez sokáig eltarthat, ne töltsd újra az oldalt!
                     </h2>
                 </div>
-                <div id="all"></div>
-                <div
-                    class="bg-slate-500 hidden mt-5 font-semibold rounded-lg p-3"
-                    id="returner"
-                ></div>
-                <button
-                    class="hidden bg-blue-500 mt-5 p-2 font-semibold text-lg rounded-lg hover:bg-blue-700"
-                    id="discordmaker"
-                >
-                    A műszak DC
-                </button>
+                <div id="napok"></div>
             </div>
         </div>
         <div
-            class="absolute bg-red-500 font-semibold left-1/2 transform -translate-x-1/2 top-5 p-2 rounded-xl"
+            id="alertbox"
+            class="fixed bg-red-500 font-semibold left-1/2 transform cursor-pointer -translate-x-1/2 top-5 p-2 rounded-xl"
         >
-            <h1>TODO:</h1>
-            <h2>Dátumonkénti A műszak felsorolása</h2>
+            <h1>
+                Az oldal betöltésekor ajánlott egy full refresh-t (CTRL+F5)
+                nyomni a hibák elkerülése végett.
+            </h1>
         </div>
     </body>
 </html>
