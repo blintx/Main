@@ -336,7 +336,6 @@ function SCKK(logs: string[]) {
                         }
                     }
                 }
-                console.log(fo)
                 handleReturn(nap)
             }
         }
