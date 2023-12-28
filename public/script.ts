@@ -11,24 +11,6 @@ dropZone?.addEventListener('dragover', (ev) => {
 let akezdet = new Date().setHours(15, 0, 0, 0)
 let avege = new Date().setHours(18, 30, 0, 0)
 
-const tagok = [
-    'Kevin',
-    'Danelson',
-    'Meier',
-    'Edgar',
-    'Lucas',
-    'Lisa',
-    'Bryan',
-    'Windsor',
-    'Jackson',
-    'Jadon',
-    'Demyan',
-    'Cristobal',
-    'Bill',
-    'Jakob',
-    'Marco',
-]
-
 interface ember {
     műszak: number
     összesen: number
@@ -156,59 +138,47 @@ function SCKK(logs: string[]) {
                                 .split('/')[0]
                                 .slice(1, -1)
                             if (cuccman !== 'senki') {
-                                if (tagok.includes(cuccman.split(' ')[0])) {
-                                    if (fo[nap].emberek[cuccman]) {
+                                if (fo[nap].emberek[cuccman]) {
+                                    if (akezdet < most && most < avege) {
+                                        fo[nap].emberek[cuccman].összesen++
+                                        fo[nap].emberek[cuccman].műszak++
+                                    } else {
+                                        fo[nap].emberek[cuccman].összesen++
+                                    }
+                                } else {
+                                    if (akezdet < most && most < avege) {
+                                        fo[nap].emberek[cuccman] = {
+                                            műszak: 1,
+                                            összesen: 1,
+                                        }
+                                    } else {
+                                        fo[nap].emberek[cuccman] = {
+                                            műszak: 0,
+                                            összesen: 1,
+                                        }
+                                    }
+                                }
+                                if (dates.length > 1) {
+                                    if (fo['Összesen'].emberek[cuccman]) {
                                         if (akezdet < most && most < avege) {
-                                            fo[nap].emberek[cuccman].összesen++
-                                            fo[nap].emberek[cuccman].műszak++
+                                            fo['Összesen'].emberek[cuccman]
+                                                .összesen++
+                                            fo['Összesen'].emberek[cuccman]
+                                                .műszak++
                                         } else {
-                                            fo[nap].emberek[cuccman].összesen++
+                                            fo['Összesen'].emberek[cuccman]
+                                                .összesen++
                                         }
                                     } else {
                                         if (akezdet < most && most < avege) {
-                                            fo[nap].emberek[cuccman] = {
+                                            fo['Összesen'].emberek[cuccman] = {
                                                 műszak: 1,
                                                 összesen: 1,
                                             }
                                         } else {
-                                            fo[nap].emberek[cuccman] = {
+                                            fo['Összesen'].emberek[cuccman] = {
                                                 műszak: 0,
                                                 összesen: 1,
-                                            }
-                                        }
-                                    }
-                                    if (dates.length > 1) {
-                                        if (fo['Összesen'].emberek[cuccman]) {
-                                            if (
-                                                akezdet < most &&
-                                                most < avege
-                                            ) {
-                                                fo['Összesen'].emberek[cuccman]
-                                                    .összesen++
-                                                fo['Összesen'].emberek[cuccman]
-                                                    .műszak++
-                                            } else {
-                                                fo['Összesen'].emberek[cuccman]
-                                                    .összesen++
-                                            }
-                                        } else {
-                                            if (
-                                                akezdet < most &&
-                                                most < avege
-                                            ) {
-                                                fo['Összesen'].emberek[
-                                                    cuccman
-                                                ] = {
-                                                    műszak: 1,
-                                                    összesen: 1,
-                                                }
-                                            } else {
-                                                fo['Összesen'].emberek[
-                                                    cuccman
-                                                ] = {
-                                                    műszak: 0,
-                                                    összesen: 1,
-                                                }
                                             }
                                         }
                                     }
