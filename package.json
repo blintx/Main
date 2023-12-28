@@ -13,6 +13,7 @@
     },
     "keywords": [],
     "author": "",
+    "type": "module",
     "license": "ISC",
     "devDependencies": {
         "@types/body-parser": "^1.19.5",

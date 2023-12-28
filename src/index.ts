@@ -1,5 +1,5 @@
 import express from 'express'
-import * as sckk from './sckk/index'
+import * as sckk from './sckk/index.js'
 import path from 'node:path'
 import bodyParser from 'body-parser'
 
