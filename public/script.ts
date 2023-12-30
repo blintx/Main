@@ -226,13 +226,12 @@ function handleReturn(nap: string) {
     ezanap.appendChild(muszakcim)
     const amuszak = document.createElement('div')
     for (const data in fo[nap].emberek) {
-        if (tagok.includes(data.split(' ')[0])) {
-            const item = document.createElement('h2')
-            item.innerText =
-                '- ' + data.split(' ')[0] + ': ' + fo[nap].emberek[data].műszak
-            amuszak?.appendChild(item)
-        }
+        const item = document.createElement('h2')
+        item.innerText =
+            '- ' + data.split(' ')[0] + ': ' + fo[nap].emberek[data].műszak
+        amuszak?.appendChild(item)
     }
+
     amuszak?.lastElementChild?.classList.add('mb-5')
     ezanap.appendChild(amuszak)
     const lemondott = document.createElement('h2')
@@ -248,10 +247,15 @@ function handleReturn(nap: string) {
     ezanap.appendChild(osszescim)
     const osszes = document.createElement('div')
     for (const data in fo[nap].emberek) {
-        const item = document.createElement('h2')
-        item.innerText =
-            '- ' + data.split(' ')[0] + ': ' + fo[nap].emberek[data].összesen
-        osszes?.appendChild(item)
+        if (tagok.includes(data.split(' ')[0])) {
+            const item = document.createElement('h2')
+            item.innerText =
+                '- ' +
+                data.split(' ')[0] +
+                ': ' +
+                fo[nap].emberek[data].összesen
+            osszes?.appendChild(item)
+        }
     }
     ezanap.appendChild(osszes)
 }
