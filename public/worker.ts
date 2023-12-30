@@ -250,5 +250,5 @@ onmessage = async (ev: jonas) => {
         }
         await new Promise((resolve) => setTimeout(resolve, 0))
     }
-    postMessage(fo)
+    postMessage({ nap: ev.data.nap, fo })
 }

@@ -76,6 +76,27 @@ dropZone?.addEventListener('drop', (ev) => {
     }
 })
 
+const tagok = [
+    'Kevin',
+    'Danelson',
+    'Meier',
+    'Edgar',
+    'Lucas',
+    'Lisa',
+    'Bryan',
+    'Windsor',
+    'Jackson',
+    'Jadon',
+    'Demyan',
+    'Cristobal',
+    'Bill',
+    'Jakob',
+    'Marco',
+    'Nick',
+    'Derion',
+    'Chris',
+]
+
 interface munkács {
     [key: string]: Worker[]
 }
@@ -113,60 +134,77 @@ async function SCKK(logs: string[]) {
                 })
                 worker.onmessage = (ev) => {
                     worker.terminate()
-                    workers[nap].splice(workers[nap].indexOf(worker), 1)
-                    if (workers[nap].length === 0) {
-                        handleReturn(nap)
-                        if (Object.keys(ev.data).length > 0) {
-                            fo[nap].lemondott += ev.data.lemondott
-                            fo[nap].egyperces += ev.data.egyperces
-                            for (const ember in ev.data.emberek) {
-                                if (fo[nap].emberek[ember]) {
-                                    fo[nap].emberek[ember].műszak +=
-                                        ev.data.emberek[ember].műszak
-                                    fo[nap].emberek[ember].összesen +=
-                                        ev.data.emberek[ember].összesen
-                                } else {
-                                    fo[nap].emberek[ember] = {
-                                        műszak: ev.data.emberek[ember].műszak,
-                                        összesen:
-                                            ev.data.emberek[ember].összesen,
-                                    }
+                    workers[ev.data.nap].splice(
+                        workers[ev.data.nap].indexOf(worker),
+                        1
+                    )
+                    if (Object.keys(ev.data.fo.emberek).length > 1) {
+                        fo[ev.data.nap].lemondott += ev.data.fo.lemondott
+                        fo[ev.data.nap].egyperces += ev.data.fo.egyperces
+                        for (const ember in ev.data.fo.emberek) {
+                            if (fo[ev.data.nap].emberek[ember]) {
+                                fo[ev.data.nap].emberek[ember].műszak +=
+                                    ev.data.fo.emberek[ember].műszak
+                                fo[ev.data.nap].emberek[ember].összesen +=
+                                    ev.data.fo.emberek[ember].összesen
+                            } else {
+                                fo[ev.data.nap].emberek[ember] = {
+                                    műszak: ev.data.fo.emberek[ember].műszak,
+                                    összesen:
+                                        ev.data.fo.emberek[ember].összesen,
                                 }
                             }
-                            fo['Összesen'].lemondott +=
-                                ev.data.Összesen.lemondott
-                            fo['Összesen'].egyperces +=
-                                ev.data.Összesen.egyperces
-                            for (const ember in ev.data.Összesen.emberek) {
-                                if (fo['Összesen'].emberek[ember]) {
-                                    fo['Összesen'].emberek[ember].műszak +=
-                                        ev.data.Összesen.emberek[ember].műszak
-                                    fo['Összesen'].emberek[ember].összesen +=
-                                        ev.data.Összesen.emberek[ember].összesen
-                                } else {
-                                    fo['Összesen'].emberek[ember] = {
-                                        műszak: ev.data.Összesen.emberek[ember]
-                                            .műszak,
-                                        összesen:
-                                            ev.data.Összesen.emberek[ember]
-                                                .összesen,
-                                    }
-                                }
-                            }
-                            console.log(fo)
                         }
+                        if (dates.length > 1) {
+                            fo['Összesen'].lemondott +=
+                                ev.data.fo.Összesen.lemondott
+                            fo['Összesen'].egyperces +=
+                                ev.data.fo.Összesen.egyperces
+                        }
+                        for (const ember in ev.data.fo.Összesen.emberek) {
+                            if (fo['Összesen'].emberek[ember]) {
+                                fo['Összesen'].emberek[ember].műszak +=
+                                    ev.data.fo.Összesen.emberek[ember].műszak
+                                fo['Összesen'].emberek[ember].összesen +=
+                                    ev.data.fo.Összesen.emberek[ember].összesen
+                            } else {
+                                fo['Összesen'].emberek[ember] = {
+                                    műszak: ev.data.fo.Összesen.emberek[ember]
+                                        .műszak,
+                                    összesen:
+                                        ev.data.fo.Összesen.emberek[ember]
+                                            .összesen,
+                                }
+                            }
+                        }
+                        console.log(fo)
+                        doneReturn()
                     }
                 }
             }
         }
         await new Promise((resolve) => setTimeout(resolve, 0))
     }
-    if (dates.length > 1) {
-        handleReturn('Összesen')
+}
+
+let doneReturnCount = 0
+function doneReturn() {
+    doneReturnCount++
+    if (doneReturnCount === dates.length) {
+        for (const manas in fo) {
+            if (manas !== 'Összesen') {
+                handleReturn(manas)
+            } else {
+                if (dates.length > 1) {
+                    handleReturn(manas)
+                }
+            }
+        }
     }
 }
 
 function handleReturn(nap: string) {
+    console.log(nap, '- Kész')
     document.getElementById('loadhelp')?.classList.add('!hidden')
     const napok = document.getElementById('napok')
     const ezanap = document.createElement('div')
@@ -188,9 +226,12 @@ function handleReturn(nap: string) {
     ezanap.appendChild(muszakcim)
     const amuszak = document.createElement('div')
     for (const data in fo[nap].emberek) {
-        const item = document.createElement('h2')
-        item.innerText = '- ' + data + ': ' + fo[nap].emberek[data].műszak
-        amuszak?.appendChild(item)
+        if (tagok.includes(data.split(' ')[0])) {
+            const item = document.createElement('h2')
+            item.innerText =
+                '- ' + data.split(' ')[0] + ': ' + fo[nap].emberek[data].műszak
+            amuszak?.appendChild(item)
+        }
     }
     amuszak?.lastElementChild?.classList.add('mb-5')
     ezanap.appendChild(amuszak)
@@ -208,7 +249,8 @@ function handleReturn(nap: string) {
     const osszes = document.createElement('div')
     for (const data in fo[nap].emberek) {
         const item = document.createElement('h2')
-        item.innerText = '- ' + data + ': ' + fo[nap].emberek[data].összesen
+        item.innerText =
+            '- ' + data.split(' ')[0] + ': ' + fo[nap].emberek[data].összesen
         osszes?.appendChild(item)
     }
     ezanap.appendChild(osszes)
