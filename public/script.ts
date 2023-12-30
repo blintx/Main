@@ -24,6 +24,9 @@ const tagok = [
     'Bill',
     'Jakob',
     'Marco',
+    'Nick',
+    'Derion',
+    'Chris',
 ]
 
 let akezdet = new Date().setHours(15, 0, 0, 0)
