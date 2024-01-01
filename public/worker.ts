@@ -10,6 +10,7 @@ interface jonas extends MessageEvent<any> {
 
 let akezdet = new Date().setHours(15, 0, 0, 0)
 let avege = new Date().setHours(18, 30, 0, 0)
+let bvege = new Date().setHours(22, 0, 0, 0)
 
 interface ember {
     műszak: number
@@ -88,7 +89,7 @@ onmessage = async (ev: jonas) => {
                         if (akezdet < most && most < avege) {
                             fo.emberek[cuccman].összesen++
                             fo.emberek[cuccman].műszak++
-                        } else {
+                        } else if (most > avege && bvege > most) {
                             fo.emberek[cuccman].összesen++
                         }
                     } else {
@@ -97,7 +98,7 @@ onmessage = async (ev: jonas) => {
                                 műszak: 1,
                                 összesen: 1,
                             }
-                        } else {
+                        } else if (most > avege && bvege > most) {
                             fo.emberek[cuccman] = {
                                 műszak: 0,
                                 összesen: 1,
