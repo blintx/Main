@@ -257,6 +257,15 @@ function handleReturn(nap: string) {
                 ': ' +
                 fo[nap].emberek[data].összesen
             osszes?.appendChild(item)
+        } else {
+            const item = document.createElement('h2')
+            item.innerText =
+                '- ' +
+                data.split(' ')[0] +
+                ': ' +
+                fo[nap].emberek[data].összesen +
+                ' (Nem A műszakos)'
+            osszes?.appendChild(item)
         }
     }
     ezanap.appendChild(osszes)
