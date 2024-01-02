@@ -351,9 +351,6 @@ function handleReturn(nap: string) {
                 osszes?.appendChild(item)
             }
             ezanap.appendChild(osszes)
-            document
-                .getElementById('csakamuszakbtn')
-                ?.classList.remove('hidden')
         }
     }
 }
