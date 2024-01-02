@@ -344,7 +344,6 @@ function handleReturn(nap: string) {
             ezanap.appendChild(osszescim)
             const osszes = document.createElement('div')
             for (const data in fo_vontatos[nap]) {
-                console.log(fo_vontatos[nap])
                 const item = document.createElement('h2')
                 item.innerText =
                     '- ' + data.split(' ')[0] + ': ' + fo_vontatos[nap][data]
