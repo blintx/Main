@@ -45,12 +45,18 @@ let fo: muszak = {
     },
 }
 
+interface vontatos {
+    [key: string]: number
+}
+
+let vontatos_fo: vontatos = {}
+
 onmessage = async (ev: jonas) => {
     for (let i = ev.data.start; i < ev.data.hanyszor + ev.data.start; i++) {
         const tesztmama = ev.data.logs.findLastIndex(
             (element) =>
                 element.startsWith('[' + ev.data.nap) &&
-                element.endsWith('Új hívás érkezett: ' + i)
+                element.endsWith('(Taxi)]: Új hívás érkezett: ' + i)
         )
         const index = ev.data.logs.findLastIndex(
             (element) =>
@@ -132,7 +138,9 @@ onmessage = async (ev: jonas) => {
                 const ujhivas = ev.data.logs.findLastIndex(
                     (element) =>
                         element.startsWith('[' + ev.data.nap) &&
-                        element.endsWith('Új hívás érkezett: ' + i)
+                        element.endsWith(
+                            '[SeeMTA - Tablet (Taxi)]: Új hívás érkezett: ' + i
+                        )
                 )
                 if (ujhivas !== -1) {
                     let most = new Date().setHours(
@@ -248,8 +256,25 @@ onmessage = async (ev: jonas) => {
                     }
                 }
             }
+        } else {
+            const vontatos = ev.data.logs.findLastIndex(
+                (element) =>
+                    element.startsWith('[' + ev.data.nap) &&
+                    element.endsWith('TOW elfogadta a következő hívást: ' + i)
+            )
+            if (vontatos !== -1) {
+                let cuccman = ev.data.logs[vontatos]
+                    .split(':')[4]
+                    .split('/')[0]
+                    .slice(1, -1)
+                if (vontatos_fo[cuccman]) {
+                    vontatos_fo[cuccman]++
+                } else {
+                    vontatos_fo[cuccman] = 1
+                }
+            }
         }
         await new Promise((resolve) => setTimeout(resolve, 0))
     }
-    postMessage({ nap: ev.data.nap, fo })
+    postMessage({ nap: ev.data.nap, fo, vfo: vontatos_fo })
 }

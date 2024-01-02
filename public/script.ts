@@ -26,7 +26,16 @@ interface jani {
     [key: string]: muszak
 }
 
+interface vontatos {
+    [key: string]: number
+}
+
+interface csaba {
+    [key: string]: vontatos
+}
+
 let fo: jani = {}
+let fo_vontatos: csaba = {}
 
 let lefutott = false
 
@@ -56,6 +65,13 @@ dropZone?.addEventListener('drop', (ev) => {
                             lemondott: 0,
                             egyperces: 0,
                         }
+                    } else if (!fo_vontatos[line.split(' ')[0].slice(1)]) {
+                        fo_vontatos[line.split(' ')[0].slice(1)] = {}
+                    }
+                    if (
+                        !fo[line.split(' ')[0].slice(1)] ||
+                        !fo_vontatos[line.split(' ')[0].slice(1)]
+                    ) {
                         workers[line.split(' ')[0].slice(1)] = []
                         dates.push(line.split(' ')[0].slice(1))
                     }
@@ -178,7 +194,20 @@ async function SCKK(logs: string[]) {
                             }
                         }
                         console.log(fo)
-                        doneReturn()
+                        doneReturn(false)
+                    }
+                    if (Object.keys(ev.data.vfo).length > 0) {
+                        for (const ember in ev.data.vfo) {
+                            if (fo_vontatos[ev.data.nap][ember]) {
+                                fo_vontatos[ev.data.nap][ember] +=
+                                    ev.data.vfo[ember]
+                            } else {
+                                fo_vontatos[ev.data.nap][ember] =
+                                    ev.data.vfo[ember]
+                            }
+                        }
+                        console.log(fo_vontatos)
+                        doneReturn(true)
                     }
                 }
             }
@@ -188,15 +217,29 @@ async function SCKK(logs: string[]) {
 }
 
 let doneReturnCount = 0
-function doneReturn() {
+function doneReturn(vontatos: boolean) {
     doneReturnCount++
-    if (doneReturnCount === dates.length) {
-        for (const manas in fo) {
-            if (manas !== 'Összesen') {
-                handleReturn(manas)
-            } else {
-                if (dates.length > 1) {
+    if (vontatos) {
+        if (doneReturnCount === dates.length + 1) {
+            for (const manas in fo) {
+                if (manas !== 'Összesen') {
                     handleReturn(manas)
+                } else {
+                    if (dates.length > 1) {
+                        handleReturn(manas)
+                    }
+                }
+            }
+        }
+    } else {
+        if (doneReturnCount === dates.length) {
+            for (const manas in fo) {
+                if (manas !== 'Összesen') {
+                    handleReturn(manas)
+                } else {
+                    if (dates.length > 1) {
+                        handleReturn(manas)
+                    }
                 }
             }
         }
@@ -204,69 +247,124 @@ function doneReturn() {
 }
 
 function handleReturn(nap: string) {
-    console.log(nap, '- Kész')
-    document.getElementById('loadhelp')?.classList.add('!hidden')
-    const napok = document.getElementById('napok')
-    const ezanap = document.createElement('div')
-    ezanap.id = nap
-    napok?.appendChild(ezanap)
-    const napcim = document.createElement('h1')
-    napcim.innerText = nap
-    napcim.classList.add(
-        'font-semibold',
-        'text-xl',
-        'my-2',
-        'bg-gray-900',
-        '-mx-10'
-    )
-    ezanap.appendChild(napcim)
-    const muszakcim = document.createElement('h2')
-    muszakcim.innerText = 'A műszak'
-    muszakcim.classList.add('font-semibold', 'mb-2', 'text-lg')
-    ezanap.appendChild(muszakcim)
-    const amuszak = document.createElement('div')
-    for (const data in fo[nap].emberek) {
-        if (fo[nap].emberek[data].műszak > 0) {
-            const item = document.createElement('h2')
-            item.innerText =
-                '- ' + data.split(' ')[0] + ': ' + fo[nap].emberek[data].műszak
-            amuszak?.appendChild(item)
+    console.log('handle', nap)
+    if (Object.keys(fo[nap].emberek).length > 0) {
+        console.log(nap, '- Kész')
+        document.getElementById('loadhelp')?.classList.add('!hidden')
+        const napok = document.getElementById('napok')
+        const ezanap = document.createElement('div')
+        ezanap.id = nap
+        napok?.appendChild(ezanap)
+        const napcim = document.createElement('h1')
+        napcim.innerText = nap
+        napcim.classList.add(
+            'font-semibold',
+            'text-xl',
+            'my-2',
+            'bg-gray-900',
+            '-mx-10'
+        )
+        ezanap.appendChild(napcim)
+        const muszakcim = document.createElement('h2')
+        muszakcim.innerText = 'A műszak'
+        muszakcim.classList.add('font-semibold', 'mb-2', 'text-lg')
+        ezanap.appendChild(muszakcim)
+        const amuszak = document.createElement('div')
+        for (const data in fo[nap].emberek) {
+            if (fo[nap].emberek[data].műszak > 0) {
+                const item = document.createElement('h2')
+                item.innerText =
+                    '- ' +
+                    data.split(' ')[0] +
+                    ': ' +
+                    fo[nap].emberek[data].műszak
+                amuszak?.appendChild(item)
+            }
         }
-    }
 
-    amuszak?.lastElementChild?.classList.add('mb-5')
-    ezanap.appendChild(amuszak)
-    const lemondott = document.createElement('h2')
-    lemondott.innerText = '- Lemondott: ' + fo[nap].lemondott
-    amuszak?.appendChild(lemondott)
-    const egyperces = document.createElement('h2')
-    egyperces.innerText = '- 1 perces: ' + fo[nap].egyperces
-    egyperces.classList.add('mb-5')
-    amuszak?.appendChild(egyperces)
-    const osszescim = document.createElement('h2')
-    osszescim.innerText = 'Összesen'
-    osszescim.classList.add('font-semibold', 'mb-2', 'text-lg')
-    ezanap.appendChild(osszescim)
-    const osszes = document.createElement('div')
-    for (const data in fo[nap].emberek) {
-        if (tagok.includes(data.split(' ')[0])) {
-            const item = document.createElement('h2')
-            item.innerText =
-                '- ' +
-                data.split(' ')[0] +
-                ': ' +
-                fo[nap].emberek[data].összesen
-            osszes?.appendChild(item)
-        } else {
-            const item = document.createElement('h2')
-            item.innerText =
-                '- ' +
-                data.split(' ')[0] +
-                ': ' +
-                fo[nap].emberek[data].összesen +
-                ' (Nem A műszakos)'
-            osszes?.appendChild(item)
+        amuszak?.lastElementChild?.classList.add('mb-5')
+        ezanap.appendChild(amuszak)
+        const lemondott = document.createElement('h2')
+        lemondott.innerText = '- Lemondott: ' + fo[nap].lemondott
+        amuszak?.appendChild(lemondott)
+        const egyperces = document.createElement('h2')
+        egyperces.innerText = '- 1 perces: ' + fo[nap].egyperces
+        egyperces.classList.add('mb-5')
+        amuszak?.appendChild(egyperces)
+        const osszescim = document.createElement('h2')
+        osszescim.innerText = 'Összesen'
+        osszescim.classList.add('font-semibold', 'mb-2', 'text-lg')
+        ezanap.appendChild(osszescim)
+        const osszes = document.createElement('div')
+        for (const data in fo[nap].emberek) {
+            if (tagok.includes(data.split(' ')[0])) {
+                const item = document.createElement('h2')
+                item.innerText =
+                    '- ' +
+                    data.split(' ')[0] +
+                    ': ' +
+                    fo[nap].emberek[data].összesen
+                osszes?.appendChild(item)
+            } else {
+                const item = document.createElement('h2')
+                item.innerText =
+                    '- ' +
+                    data.split(' ')[0] +
+                    ': ' +
+                    fo[nap].emberek[data].összesen +
+                    ' (Nem A műszakos)'
+                item.classList.add('notamuszak')
+                osszes?.appendChild(item)
+            }
+        }
+        ezanap.appendChild(osszes)
+        document.getElementById('csakamuszakbtn')?.classList.remove('hidden')
+    }
+    if (nap !== 'Összesen') {
+        if (Object.keys(fo_vontatos[nap]).length > 0) {
+            console.log('Vontatós ' + nap, '- Kész')
+            document.getElementById('loadhelp')?.classList.add('!hidden')
+            const napok = document.getElementById('napok')
+            const ezanap = document.createElement('div')
+            ezanap.id = 'v' + nap
+            napok?.appendChild(ezanap)
+            const napcim = document.createElement('h1')
+            napcim.innerText = 'Vontatós ' + nap
+            napcim.classList.add(
+                'font-semibold',
+                'text-xl',
+                'my-2',
+                'bg-gray-900',
+                '-mx-10'
+            )
+            ezanap.appendChild(napcim)
+            const osszescim = document.createElement('h2')
+            osszescim.innerText = 'Összesen'
+            osszescim.classList.add('font-semibold', 'mb-2', 'text-lg')
+            ezanap.appendChild(osszescim)
+            const osszes = document.createElement('div')
+            for (const data in fo_vontatos[nap]) {
+                console.log(fo_vontatos[nap])
+                const item = document.createElement('h2')
+                item.innerText =
+                    '- ' + data.split(' ')[0] + ': ' + fo_vontatos[nap][data]
+                osszes?.appendChild(item)
+            }
+            ezanap.appendChild(osszes)
+            document
+                .getElementById('csakamuszakbtn')
+                ?.classList.remove('hidden')
         }
     }
-    ezanap.appendChild(osszes)
 }
+
+document.getElementById('csakamuszakbtn')?.addEventListener('click', (ev) => {
+    ev.preventDefault()
+    for (let i of document.getElementsByClassName('notamuszak')) {
+        if (i.classList.contains('hidden')) {
+            i.classList.remove('hidden')
+        } else {
+            i.classList.add('hidden')
+        }
+    }
+})
