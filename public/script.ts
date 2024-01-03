@@ -10,6 +10,7 @@ dropZone?.addEventListener('dragover', (ev) => {
 interface ember {
     műszak: number
     összesen: number
+    bműszak: number
 }
 
 interface emberjson {
@@ -163,11 +164,14 @@ async function SCKK(logs: string[]) {
                                     ev.data.fo.emberek[ember].műszak
                                 fo[ev.data.nap].emberek[ember].összesen +=
                                     ev.data.fo.emberek[ember].összesen
+                                fo[ev.data.nap].emberek[ember].bműszak +=
+                                    ev.data.fo.emberek[ember].bműszak
                             } else {
                                 fo[ev.data.nap].emberek[ember] = {
                                     műszak: ev.data.fo.emberek[ember].műszak,
                                     összesen:
                                         ev.data.fo.emberek[ember].összesen,
+                                    bműszak: ev.data.fo.emberek[ember].bműszak,
                                 }
                             }
                         }
@@ -190,6 +194,9 @@ async function SCKK(logs: string[]) {
                                     összesen:
                                         ev.data.fo.Összesen.emberek[ember]
                                             .összesen,
+                                    bműszak:
+                                        ev.data.fo.Összesen.emberek[ember]
+                                            .bműszak,
                                 }
                             }
                         }
@@ -298,13 +305,30 @@ function handleReturn(nap: string) {
         const osszes = document.createElement('div')
         for (const data in fo[nap].emberek) {
             if (tagok.includes(data.split(' ')[0])) {
-                const item = document.createElement('h2')
-                item.innerText =
-                    '- ' +
-                    data.split(' ')[0] +
-                    ': ' +
-                    fo[nap].emberek[data].összesen
-                osszes?.appendChild(item)
+                if (fo[nap].emberek[data].bműszak > 0) {
+                    const item = document.createElement('h2')
+                    item.innerText =
+                        '- ' +
+                        data.split(' ')[0] +
+                        ': ' +
+                        fo[nap].emberek[data].összesen +
+                        ` (${fo[nap].emberek[data].műszak}+${
+                            fo[nap].emberek[data].bműszak
+                        }+${
+                            fo[nap].emberek[data].összesen -
+                            (fo[nap].emberek[data].műszak +
+                                fo[nap].emberek[data].bműszak)
+                        })`
+                    osszes?.appendChild(item)
+                } else {
+                    const item = document.createElement('h2')
+                    item.innerText =
+                        '- ' +
+                        data.split(' ')[0] +
+                        ': ' +
+                        fo[nap].emberek[data].összesen
+                    osszes?.appendChild(item)
+                }
             } else {
                 const item = document.createElement('h2')
                 item.innerText =

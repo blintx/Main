@@ -15,6 +15,7 @@ let bvege = new Date().setHours(22, 0, 0, 0)
 interface ember {
     műszak: number
     összesen: number
+    bműszak: number
 }
 
 interface emberjson {
@@ -97,17 +98,28 @@ onmessage = async (ev: jonas) => {
                             fo.emberek[cuccman].műszak++
                         } else if (most > avege && bvege > most) {
                             fo.emberek[cuccman].összesen++
+                            fo.emberek[cuccman].bműszak++
+                        } else {
+                            fo.emberek[cuccman].összesen++
                         }
                     } else {
                         if (akezdet < most && most < avege) {
                             fo.emberek[cuccman] = {
                                 műszak: 1,
                                 összesen: 1,
+                                bműszak: 0,
                             }
                         } else if (most > avege && bvege > most) {
                             fo.emberek[cuccman] = {
                                 műszak: 0,
                                 összesen: 1,
+                                bműszak: 0,
+                            }
+                        } else {
+                            fo.emberek[cuccman] = {
+                                műszak: 0,
+                                összesen: 1,
+                                bműszak: 0,
                             }
                         }
                     }
@@ -124,11 +136,13 @@ onmessage = async (ev: jonas) => {
                                 fo['Összesen'].emberek[cuccman] = {
                                     műszak: 1,
                                     összesen: 1,
+                                    bműszak: 0,
                                 }
                             } else {
                                 fo['Összesen'].emberek[cuccman] = {
                                     műszak: 0,
                                     összesen: 1,
+                                    bműszak: 0,
                                 }
                             }
                         }
