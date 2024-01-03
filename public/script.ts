@@ -219,7 +219,7 @@ async function SCKK(logs: string[]) {
 let doneReturnCount = 0
 function doneReturn(vontatos: boolean) {
     doneReturnCount++
-    if (vontatos) {
+    if (vontatos && 2 > dates.length) {
         if (doneReturnCount === dates.length + 1) {
             for (const manas in fo) {
                 if (manas !== 'Összesen') {
