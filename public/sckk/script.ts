@@ -35,30 +35,32 @@ interface csaba {
     [key: string]: vontatos
 }
 
-let fo: jani = {}
-let fo_vontatos: csaba = {}
+const fo: jani = {}
+const fo_vontatos: csaba = {}
 
 let lefutott = false
 
-let dates: string[] = []
+const dates: string[] = []
 
 dropZone?.addEventListener('drop', (ev) => {
     ev.preventDefault()
     lefutott = true
-    let logs: string[] = []
-    let fiels = ev.dataTransfer?.files.length
+    const logs: string[] = []
+    const fiels = ev.dataTransfer?.files.length
     let filesProcessed = 0
-    for (const file of ev.dataTransfer!.files) {
+    if (!ev.dataTransfer) return
+    for (const file of ev.dataTransfer.files) {
         const reader = new FileReader()
 
-        reader.onload = function (event) {
+        reader.onload = (event) => {
             const fileContent = event.target?.result
 
             // Split the file content into lines
             const lines = fileContent?.toString().split('\n')
 
             // Push each line into the logs array
-            lines?.forEach((line) => {
+            if (!lines) return
+            for (const line of lines) {
                 if (line.split(' ')[0].slice(1) !== '') {
                     if (!fo[line.split(' ')[0].slice(1)]) {
                         fo[line.split(' ')[0].slice(1)] = {
@@ -78,7 +80,7 @@ dropZone?.addEventListener('drop', (ev) => {
                     }
                 }
                 logs.push(line.trim()) // Trim to remove leading/trailing whitespaces
-            })
+            }
 
             filesProcessed++
 
@@ -94,33 +96,31 @@ dropZone?.addEventListener('drop', (ev) => {
 })
 
 const tagok = [
-    'Kevin',
-    'Danelson',
-    'Meier',
-    'Edgar',
-    'Lucas',
-    'Lisa',
-    'Bryan',
-    'Windsor',
-    'Jackson',
-    'Jadon',
-    'Demyan',
-    'Cristobal',
-    'Bill',
-    'Jakob',
-    'Marco',
-    'Nick',
-    'Derion',
-    'Chris',
+    'Kevin Styles',
+    'Danelson Benjamin',
+    'Demyan Zakharov',
+    'Meier Sofie',
+    'Edgar Shaw',
+    'Lisa Vaston',
+    'Windsor Benjy',
+    'Jackson Chavez',
+    'Cristobal Armenteros',
+    'Bill Ches',
+    'Jakob Logan',
+    'Marco Agustino Fernando',
+    'Nick Norton',
+    'Derion Devid',
+    'Chris Antendo',
+    'Bryan R Black',
 ]
 
 interface munkács {
     [key: string]: Worker[]
 }
 
-let workerNum = 5
-let hivasszam = 2000
-let workers: munkács = {}
+const workerNum = 5
+const hivasszam = 2000
+const workers: munkács = {}
 
 document.getElementById('alertbox')?.addEventListener('click', (ev) => {
     ev.preventDefault()
@@ -131,7 +131,7 @@ async function SCKK(logs: string[]) {
     document.getElementById('loadhelp')?.classList.remove('!hidden')
     document.getElementById('draghelp')?.classList.add('hidden')
     if (dates.length > 1) {
-        fo['Összesen'] = {
+        fo.Összesen = {
             emberek: {},
             lemondott: 0,
             egyperces: 0,
@@ -176,19 +176,19 @@ async function SCKK(logs: string[]) {
                             }
                         }
                         if (dates.length > 1) {
-                            fo['Összesen'].lemondott +=
+                            fo.Összesen.lemondott +=
                                 ev.data.fo.Összesen.lemondott
-                            fo['Összesen'].egyperces +=
+                            fo.Összesen.egyperces +=
                                 ev.data.fo.Összesen.egyperces
                         }
                         for (const ember in ev.data.fo.Összesen.emberek) {
-                            if (fo['Összesen'].emberek[ember]) {
-                                fo['Összesen'].emberek[ember].műszak +=
+                            if (fo.Összesen.emberek[ember]) {
+                                fo.Összesen.emberek[ember].műszak +=
                                     ev.data.fo.Összesen.emberek[ember].műszak
-                                fo['Összesen'].emberek[ember].összesen +=
+                                fo.Összesen.emberek[ember].összesen +=
                                     ev.data.fo.Összesen.emberek[ember].összesen
                             } else {
-                                fo['Összesen'].emberek[ember] = {
+                                fo.Összesen.emberek[ember] = {
                                     műszak: ev.data.fo.Összesen.emberek[ember]
                                         .műszak,
                                     összesen:
@@ -280,11 +280,7 @@ function handleReturn(nap: string) {
         for (const data in fo[nap].emberek) {
             if (fo[nap].emberek[data].műszak > 0) {
                 const item = document.createElement('h2')
-                item.innerText =
-                    '- ' +
-                    data.split(' ')[0] +
-                    ': ' +
-                    fo[nap].emberek[data].műszak
+                item.innerText = `- ${data}: ${fo[nap].emberek[data].műszak}`
                 amuszak?.appendChild(item)
             }
         }
@@ -292,10 +288,10 @@ function handleReturn(nap: string) {
         amuszak?.lastElementChild?.classList.add('mb-5')
         ezanap.appendChild(amuszak)
         const lemondott = document.createElement('h2')
-        lemondott.innerText = '- Lemondott: ' + fo[nap].lemondott
+        lemondott.innerText = `- Lemondott: ${fo[nap].lemondott}`
         amuszak?.appendChild(lemondott)
         const egyperces = document.createElement('h2')
-        egyperces.innerText = '- 1 perces: ' + fo[nap].egyperces
+        egyperces.innerText = `- 1 perces: ${fo[nap].egyperces}`
         egyperces.classList.add('mb-5')
         amuszak?.appendChild(egyperces)
         const osszescim = document.createElement('h2')
@@ -304,39 +300,27 @@ function handleReturn(nap: string) {
         ezanap.appendChild(osszescim)
         const osszes = document.createElement('div')
         for (const data in fo[nap].emberek) {
-            if (tagok.includes(data.split(' ')[0])) {
+            if (tagok.includes(data)) {
                 if (fo[nap].emberek[data].bműszak > 0) {
                     const item = document.createElement('h2')
-                    item.innerText =
-                        '- ' +
-                        data.split(' ')[0] +
-                        ': ' +
-                        fo[nap].emberek[data].összesen +
-                        ` (${fo[nap].emberek[data].műszak}+${
-                            fo[nap].emberek[data].bműszak
-                        }+${
-                            fo[nap].emberek[data].összesen -
-                            (fo[nap].emberek[data].műszak +
-                                fo[nap].emberek[data].bműszak)
-                        })`
+                    item.innerText = `- ${data}: ${
+                        fo[nap].emberek[data].összesen
+                    } (${fo[nap].emberek[data].műszak}+${
+                        fo[nap].emberek[data].bműszak
+                    }+${
+                        fo[nap].emberek[data].összesen -
+                        (fo[nap].emberek[data].műszak +
+                            fo[nap].emberek[data].bműszak)
+                    })`
                     osszes?.appendChild(item)
                 } else {
                     const item = document.createElement('h2')
-                    item.innerText =
-                        '- ' +
-                        data.split(' ')[0] +
-                        ': ' +
-                        fo[nap].emberek[data].összesen
+                    item.innerText = `- ${data}: ${fo[nap].emberek[data].összesen}`
                     osszes?.appendChild(item)
                 }
             } else {
                 const item = document.createElement('h2')
-                item.innerText =
-                    '- ' +
-                    data.split(' ')[0] +
-                    ': ' +
-                    fo[nap].emberek[data].összesen +
-                    ' (Nem A műszakos)'
+                item.innerText = `- ${data}: ${fo[nap].emberek[data].összesen} (Nem A műszakos)`
                 item.classList.add('notamuszak')
                 osszes?.appendChild(item)
             }
@@ -346,14 +330,14 @@ function handleReturn(nap: string) {
     }
     if (nap !== 'Összesen') {
         if (Object.keys(fo_vontatos[nap]).length > 0) {
-            console.log('Vontatós ' + nap, '- Kész')
+            console.log(`Vontatós ${nap}`, '- Kész')
             document.getElementById('loadhelp')?.classList.add('!hidden')
             const napok = document.getElementById('napok')
             const ezanap = document.createElement('div')
-            ezanap.id = 'v' + nap
+            ezanap.id = `v${nap}`
             napok?.appendChild(ezanap)
             const napcim = document.createElement('h1')
-            napcim.innerText = 'Vontatós ' + nap
+            napcim.innerText = `Vontatós ${nap}`
             napcim.classList.add(
                 'font-semibold',
                 'text-xl',
@@ -369,8 +353,7 @@ function handleReturn(nap: string) {
             const osszes = document.createElement('div')
             for (const data in fo_vontatos[nap]) {
                 const item = document.createElement('h2')
-                item.innerText =
-                    '- ' + data.split(' ')[0] + ': ' + fo_vontatos[nap][data]
+                item.innerText = `- ${data}: ${fo_vontatos[nap][data]}`
                 osszes?.appendChild(item)
             }
             ezanap.appendChild(osszes)
@@ -380,7 +363,7 @@ function handleReturn(nap: string) {
 
 document.getElementById('csakamuszakbtn')?.addEventListener('click', (ev) => {
     ev.preventDefault()
-    for (let i of document.getElementsByClassName('notamuszak')) {
+    for (const i of document.getElementsByClassName('notamuszak')) {
         if (i.classList.contains('hidden')) {
             i.classList.remove('hidden')
         } else {

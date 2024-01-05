@@ -1,4 +1,4 @@
-interface jonas extends MessageEvent<any> {
+interface jonas extends MessageEvent {
     data: {
         logs: string[]
         nap: string
@@ -8,9 +8,9 @@ interface jonas extends MessageEvent<any> {
     }
 }
 
-let akezdet = new Date().setHours(15, 0, 0, 0)
-let avege = new Date().setHours(18, 30, 0, 0)
-let bvege = new Date().setHours(22, 0, 0, 0)
+const akezdet = new Date().setHours(15, 0, 0, 0)
+const avege = new Date().setHours(18, 30, 0, 0)
+const bvege = new Date().setHours(22, 0, 0, 0)
 
 interface ember {
     műszak: number
@@ -35,7 +35,7 @@ interface muszak {
     Összesen: all
 }
 
-let fo: muszak = {
+const fo: muszak = {
     emberek: {},
     lemondott: 0,
     egyperces: 0,
@@ -50,23 +50,23 @@ interface vontatos {
     [key: string]: number
 }
 
-let vontatos_fo: vontatos = {}
+const vontatos_fo: vontatos = {}
 
 onmessage = async (ev: jonas) => {
     for (let i = ev.data.start; i < ev.data.hanyszor + ev.data.start; i++) {
         const tesztmama = ev.data.logs.findLastIndex(
             (element) =>
-                element.startsWith('[' + ev.data.nap) &&
-                element.endsWith('(Taxi)]: Új hívás érkezett: ' + i)
+                element.startsWith(`[${ev.data.nap}`) &&
+                element.endsWith(`(Taxi)]: Új hívás érkezett: ${i}`)
         )
         const index = ev.data.logs.findLastIndex(
             (element) =>
-                element.startsWith('[' + ev.data.nap) &&
-                element.endsWith('TAXI elfogadta a következő hívást: ' + i)
+                element.startsWith(`[${ev.data.nap}`) &&
+                element.endsWith(`TAXI elfogadta a következő hívást: ${i}`)
         )
         if (tesztmama !== -1 || index !== -1) {
             if (index !== -1) {
-                let most = new Date().setHours(
+                const most = new Date().setHours(
                     Number(
                         ev.data.logs[index]
                             .split(' ')[1]
@@ -87,7 +87,7 @@ onmessage = async (ev: jonas) => {
                     ),
                     0
                 )
-                let cuccman = ev.data.logs[index]
+                const cuccman = ev.data.logs[index]
                     .split(':')[4]
                     .split('/')[0]
                     .slice(1, -1)
@@ -124,22 +124,22 @@ onmessage = async (ev: jonas) => {
                         }
                     }
                     if (ev.data.dates.length > 1) {
-                        if (fo['Összesen'].emberek[cuccman]) {
+                        if (fo.Összesen.emberek[cuccman]) {
                             if (akezdet < most && most < avege) {
-                                fo['Összesen'].emberek[cuccman].összesen++
-                                fo['Összesen'].emberek[cuccman].műszak++
+                                fo.Összesen.emberek[cuccman].összesen++
+                                fo.Összesen.emberek[cuccman].műszak++
                             } else {
-                                fo['Összesen'].emberek[cuccman].összesen++
+                                fo.Összesen.emberek[cuccman].összesen++
                             }
                         } else {
                             if (akezdet < most && most < avege) {
-                                fo['Összesen'].emberek[cuccman] = {
+                                fo.Összesen.emberek[cuccman] = {
                                     műszak: 1,
                                     összesen: 1,
                                     bműszak: 0,
                                 }
                             } else {
-                                fo['Összesen'].emberek[cuccman] = {
+                                fo.Összesen.emberek[cuccman] = {
                                     műszak: 0,
                                     összesen: 1,
                                     bműszak: 0,
@@ -151,13 +151,13 @@ onmessage = async (ev: jonas) => {
             } else {
                 const ujhivas = ev.data.logs.findLastIndex(
                     (element) =>
-                        element.startsWith('[' + ev.data.nap) &&
+                        element.startsWith(`[${ev.data.nap}`) &&
                         element.endsWith(
-                            '[SeeMTA - Tablet (Taxi)]: Új hívás érkezett: ' + i
+                            `[SeeMTA - Tablet (Taxi)]: Új hívás érkezett: ${i}`
                         )
                 )
                 if (ujhivas !== -1) {
-                    let most = new Date().setHours(
+                    const most = new Date().setHours(
                         Number(
                             ev.data.logs[ujhivas]
                                 .split(' ')[1]
@@ -180,21 +180,21 @@ onmessage = async (ev: jonas) => {
                     )
                     const torolve = ev.data.logs.findLastIndex(
                         (element) =>
-                            element.startsWith('[' + ev.data.nap) &&
+                            element.startsWith(`[${ev.data.nap}`) &&
                             element.includes(
-                                'Törlődött a következő hívás: ' + i
+                                `Törlődött a következő hívás: ${i}`
                             ) &&
                             element.endsWith('TAXI törölte)')
                     )
                     const elfogadva = ev.data.logs.findLastIndex(
                         (element) =>
-                            element.startsWith('[' + ev.data.nap) &&
+                            element.startsWith(`[${ev.data.nap}`) &&
                             element.endsWith(
-                                'TAXI elfogadta a következő hívást: ' + i
+                                `TAXI elfogadta a következő hívást: ${i}`
                             )
                     )
                     if (torolve !== -1 && elfogadva === -1) {
-                        let elf = new Date().setHours(
+                        const elf = new Date().setHours(
                             Number(
                                 ev.data.logs[torolve]
                                     .split(' ')[1]
@@ -218,28 +218,26 @@ onmessage = async (ev: jonas) => {
                         if (most - elf <= 60000) {
                             fo.egyperces++
                             if (ev.data.dates.length > 1) {
-                                fo['Összesen'].egyperces++
+                                fo.Összesen.egyperces++
                             }
                         }
                     } else {
                         const lemondott = ev.data.logs.findLastIndex(
                             (element) =>
-                                element.startsWith('[' + ev.data.nap) &&
+                                element.startsWith(`[${ev.data.nap}`) &&
                                 element.includes(
-                                    'Törlődött a következő hívás: ' +
-                                        i +
-                                        ' (lemondta a játékos)'
+                                    `Törlődött a következő hívás: ${i} (lemondta a játékos)`
                                 )
                         )
                         const lemondott2 = ev.data.logs.findLastIndex(
                             (element) =>
-                                element.startsWith('[' + ev.data.nap) &&
+                                element.startsWith(`[${ev.data.nap}`) &&
                                 element.endsWith(
-                                    'TAXI elfogadta a következő hívást: ' + i
+                                    `TAXI elfogadta a következő hívást: ${i}`
                                 )
                         )
-                        if (lemondott !== -1 && lemondott2 == -1) {
-                            let most = new Date().setHours(
+                        if (lemondott !== -1 && lemondott2 === -1) {
+                            const most = new Date().setHours(
                                 Number(
                                     ev.data.logs[lemondott]
                                         .split(' ')[1]
@@ -263,7 +261,7 @@ onmessage = async (ev: jonas) => {
                             if (akezdet < most && most < avege) {
                                 fo.lemondott++
                                 if (ev.data.dates.length > 1) {
-                                    fo['Összesen'].lemondott++
+                                    fo.Összesen.lemondott++
                                 }
                             }
                         }
@@ -273,11 +271,11 @@ onmessage = async (ev: jonas) => {
         } else {
             const vontatos = ev.data.logs.findLastIndex(
                 (element) =>
-                    element.startsWith('[' + ev.data.nap) &&
-                    element.endsWith('TOW elfogadta a következő hívást: ' + i)
+                    element.startsWith(`[${ev.data.nap}`) &&
+                    element.endsWith(`TOW elfogadta a következő hívást: ${i}`)
             )
             if (vontatos !== -1) {
-                let cuccman = ev.data.logs[vontatos]
+                const cuccman = ev.data.logs[vontatos]
                     .split(':')[4]
                     .split('/')[0]
                     .slice(1, -1)
