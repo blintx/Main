@@ -109,8 +109,6 @@ const tagok = [
     'Jakob Logan',
     'Marco Agustino Fernando',
     'Nick Norton',
-    'Derion Devid',
-    'Chris Antendo',
     'Bryan R Black',
 ]
 
