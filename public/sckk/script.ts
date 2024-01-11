@@ -212,18 +212,6 @@ let doneReturnCount = 0;
 function doneReturn(vontatos: boolean) {
 	doneReturnCount++;
 	if (vontatos && 2 > dates.length) {
-		if (doneReturnCount === dates.length + 1) {
-			for (const manas in fo) {
-				if (manas !== "Összesen") {
-					handleReturn(manas);
-				} else {
-					if (dates.length > 1) {
-						handleReturn(manas);
-					}
-				}
-			}
-		}
-	} else {
 		if (doneReturnCount === dates.length) {
 			for (const manas in fo) {
 				if (manas !== "Összesen") {
