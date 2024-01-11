@@ -312,6 +312,7 @@ function handleReturn(nap: string) {
 					osszes?.appendChild(item);
 				} else {
 					const item = document.createElement("h2");
+					item.classList.add("notamuszak");
 					item.innerText = `- ${data}: ${fo[nap].emberek[data].összesen} [NEM A]`;
 					osszes?.appendChild(item);
 				}
