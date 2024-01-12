@@ -239,11 +239,6 @@ function doneReturn() {
 	}
 }
 
-document.getElementById("devteszt")?.addEventListener("click", (ev) => {
-	ev.preventDefault();
-	console.log(workers);
-});
-
 function handleReturn(nap: string) {
 	console.log("handle", nap);
 	if (Object.keys(fo[nap].emberek).length > 0) {
