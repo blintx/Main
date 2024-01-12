@@ -150,6 +150,9 @@ async function SCKK(logs: string[]) {
 				worker.onmessage = (ev) => {
 					worker.terminate();
 					workers[ev.data.nap].splice(workers[ev.data.nap].indexOf(worker), 1);
+					if (workers[ev.data.nap].length === 0) {
+						delete workers[ev.data.nap];
+					}
 					if (Object.keys(ev.data.fo.emberek).length > 1) {
 						fo[ev.data.nap].lemondott += ev.data.fo.lemondott;
 						fo[ev.data.nap].egyperces += ev.data.fo.egyperces;
@@ -188,9 +191,8 @@ async function SCKK(logs: string[]) {
 							}
 						}
 						console.log(fo);
-						doneReturn(false);
-					}
-					if (Object.keys(ev.data.vfo).length > 0) {
+						doneReturn();
+					} else if (Object.keys(ev.data.vfo).length > 0) {
 						for (const ember in ev.data.vfo) {
 							if (fo_vontatos[ev.data.nap][ember]) {
 								fo_vontatos[ev.data.nap][ember] += ev.data.vfo[ember];
@@ -199,7 +201,9 @@ async function SCKK(logs: string[]) {
 							}
 						}
 						console.log(fo_vontatos);
-						doneReturn(true);
+						doneReturn();
+					} else {
+						doneReturn();
 					}
 				};
 			}
@@ -208,49 +212,37 @@ async function SCKK(logs: string[]) {
 	}
 }
 
-let doneReturnCount = 0;
-function doneReturn(vontatos: boolean) {
-	doneReturnCount++;
-	if (2 > dates.length) {
-		if (vontatos) {
-			if (doneReturnCount === dates.length) {
-				for (const manas in fo) {
-					if (manas !== "Összesen") {
-						handleReturn(manas);
-					} else {
-						if (dates.length > 1) {
-							handleReturn(manas);
-						}
-					}
-				}
-			}
-		} else {
-			if (doneReturnCount === dates.length + 1) {
-				for (const manas in fo) {
-					if (manas !== "Összesen") {
-						handleReturn(manas);
-					} else {
-						if (dates.length > 1) {
-							handleReturn(manas);
-						}
-					}
+// let doneReturnCount = 0;
+let canDo = false;
+function doneReturn() {
+	let jancsi = 0;
+	if (canDo) {
+		for (const manas in fo) {
+			if (manas !== "Összesen") {
+				handleReturn(manas);
+			} else {
+				if (dates.length > 1) {
+					handleReturn(manas);
 				}
 			}
 		}
 	} else {
-		if (doneReturnCount === dates.length) {
-			for (const manas in fo) {
-				if (manas !== "Összesen") {
-					handleReturn(manas);
-				} else {
-					if (dates.length > 1) {
-						handleReturn(manas);
-					}
-				}
+		for (const nap of dates) {
+			if (!workers[nap]) {
+				jancsi++;
+			}
+			if (jancsi === dates.length) {
+				canDo = true;
+				doneReturn();
 			}
 		}
 	}
 }
+
+document.getElementById("devteszt")?.addEventListener("click", (ev) => {
+	ev.preventDefault();
+	console.log(workers);
+});
 
 function handleReturn(nap: string) {
 	console.log("handle", nap);
